@@ -22,6 +22,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use Rhumsaa\Uuid\Uuid;
+use WT\Assets;
 
 // Note that the user favorites module simply extends this module, so ensure that the
 // logic works for both.
@@ -106,9 +107,8 @@ class gedcom_favorites_WT_Module extends WT_Module implements WT_Module_Block {
 		$title=$this->getTitle();
 
 		if (WT_USER_ID) {
-			$controller
-				->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-				->addInlineJavascript('autocomplete();');
+			Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+			Assets::addInlineJs('autocomplete();');
 		}
 
 		$content = '';

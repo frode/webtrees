@@ -24,6 +24,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 define('WT_SCRIPT_NAME', 'statistics.php');
 require './includes/session.php';
 
@@ -33,9 +35,13 @@ $ajax = WT_Filter::getBool('ajax');
 
 if (!$ajax) {
 	$controller = new WT_Controller_Page();
-	$controller->setPageTitle(WT_I18N::translate('Statistics'))
-		->addExternalJavascript(WT_STATIC_URL . 'js/autocomplete.js')
-		->addInlineJavascript('
+	$controller
+		->setPageTitle(WT_I18N::translate('Statistics'))
+		->pageHeader();
+
+	Assets::addJs(WT_STATIC_URL . 'js/autocomplete.js');
+	Assets::addInlineJs('autocomplete();');
+	Assets::addInlineJs('
 			jQuery("#statistics_chart").css("visibility", "visible");
 			jQuery("#statistics_chart").tabs({
 				load: function() {
@@ -55,8 +61,7 @@ if (!$ajax) {
 					});
 				}
 			});
-		')
-		->pageHeader();
+		');
 
 	echo '<div id="statistics-page"><h2>', WT_I18N::translate('Statistics'), '</h2>',
 		'<div id="statistics_chart">',
@@ -76,10 +81,11 @@ if (!$ajax) {
 	'<br><br>';
 } else {
 	$controller = new WT_Controller_Ajax();
-	$controller
-		->pageHeader()
-		->addInlineJavascript('autocomplete();')
-		->addInlineJavascript('jQuery("#loading-indicator").removeClass("loading-image");');
+	$controller->pageHeader();
+
+	Assets::addInlineJs('autocomplete();');
+	Assets::addInlineJs('jQuery("#loading-indicator").removeClass("loading-image");');
+
 	$stats = new WT_Stats($GEDCOM);
 	if ($tab==0) {
 		echo '<fieldset>

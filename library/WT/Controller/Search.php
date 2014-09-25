@@ -21,6 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
 use WT\Log;
 
 class WT_Controller_Search extends WT_Controller_Page {
@@ -568,9 +569,9 @@ class WT_Controller_Search extends WT_Controller_Page {
 		// ---- section to search and display results on a general keyword search
 		if ($this->action == "general" || $this->action == "soundex" || $this->action == "replace") {
 			if ($this->myindilist || $this->myfamlist || $this->mysourcelist || $this->mynotelist) {
-				$this->addInlineJavascript('jQuery("#search-result-tabs").tabs();');
-				$this->addInlineJavascript('jQuery("#search-result-tabs").css("visibility", "visible");');
-				$this->addInlineJavascript('jQuery(".loading-image").css("display", "none");');
+				Assets::addInlineJs('jQuery("#search-result-tabs").tabs();');
+				Assets::addInlineJs('jQuery("#search-result-tabs").css("visibility", "visible");');
+				Assets::addInlineJs('jQuery(".loading-image").css("display", "none");');
 				echo '<br>';
 				echo '<div class="loading-image">&nbsp;</div>';
 				echo '<div id="search-result-tabs"><ul>';
@@ -610,7 +611,7 @@ class WT_Controller_Search extends WT_Controller_Page {
 					}
 				}
 				echo '</div>';
-				$this->addInlineJavascript('jQuery("#searchAccordion-indi").accordion({heightStyle: "content", collapsible: true});');
+				Assets::addInlineJs('jQuery("#searchAccordion-indi").accordion({heightStyle: "content", collapsible: true});');
 
 				// family results
 				echo '<div id="searchAccordion-fam">';
@@ -634,7 +635,7 @@ class WT_Controller_Search extends WT_Controller_Page {
 					}
 				}
 				echo '</div>';//#searchAccordion-fam
-				$this->addInlineJavascript('jQuery("#searchAccordion-fam").accordion({heightStyle: "content", collapsible: true});');
+				Assets::addInlineJs('jQuery("#searchAccordion-fam").accordion({heightStyle: "content", collapsible: true});');
 
 				// source results
 				echo '<div id="searchAccordion-source">';
@@ -658,7 +659,7 @@ class WT_Controller_Search extends WT_Controller_Page {
 					}
 				}
 				echo '</div>';//#searchAccordion-source
-				$this->addInlineJavascript('jQuery("#searchAccordion-source").accordion({heightStyle: "content", collapsible: true});');
+				Assets::addInlineJs('jQuery("#searchAccordion-source").accordion({heightStyle: "content", collapsible: true});');
 
 				// note results
 				echo '<div id="searchAccordion-note">';
@@ -682,7 +683,7 @@ class WT_Controller_Search extends WT_Controller_Page {
 					}
 				}
 				echo '</div>';//#searchAccordion-note
-				$this->addInlineJavascript('jQuery("#searchAccordion-note").accordion({heightStyle: "content", collapsible: true});');
+				Assets::addInlineJs('jQuery("#searchAccordion-note").accordion({heightStyle: "content", collapsible: true});');
 
 				$GEDCOM = WT_GEDCOM;
 				load_gedcom_settings(WT_GED_ID);

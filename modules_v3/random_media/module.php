@@ -21,6 +21,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 	// Extend class WT_Module
 	public function getTitle() {
@@ -151,7 +153,7 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 					</script>';
 			}
 			if ($start) {
-				$content .= '<script>togglePlay();</script>';
+				Assets::addInlineJs('togglePlay();');
 			}
 			$content .= '<div class="center" id="random_picture_content'.$block_id.'">';
 			$content .= '<table id="random_picture_box"><tr><td';

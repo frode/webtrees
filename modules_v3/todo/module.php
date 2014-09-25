@@ -22,6 +22,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use Rhumsaa\Uuid\Uuid;
+use WT\Assets;
 
 class todo_WT_Module extends WT_Module implements WT_Module_Block {
 	// Extend class WT_Module
@@ -36,7 +37,7 @@ class todo_WT_Module extends WT_Module implements WT_Module_Block {
 
 	// Implement class WT_Module_Block
 	public function getBlock($block_id, $template=true, $cfg=null) {
-		global $ctype, $controller;
+		global $ctype;
 
 		$show_unassigned=get_block_setting($block_id, 'show_unassigned', true);
 		$show_other     =get_block_setting($block_id, 'show_other',      true);
@@ -61,9 +62,8 @@ class todo_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$table_id = Uuid::uuid4(); // create a unique ID
 
-		$controller
-			->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
-			->addInlineJavascript('
+		Assets::addJs(WT_JQUERY_DATATABLES_URL);
+		Assets::addInlineJs('
 			jQuery("#' . $table_id . '").dataTable({
 				dom: \'t\',
 				'.WT_I18N::datatablesI18N().',

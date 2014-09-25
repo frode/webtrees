@@ -18,6 +18,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use WT\Assets;
+
 class WT_Controller_Simple extends WT_Controller_Page {
 	/**
 	 * Create content for a popup window.
@@ -51,7 +53,7 @@ class WT_Controller_Simple extends WT_Controller_Page {
 	 */
 	public function restrictAccess($condition) {
 		if ($condition !== true) {
-			$this->addInlineJavascript('opener.window.location.reload(); window.close();');
+			Assets::addInlineJs('opener.window.location.reload(); window.close();');
 			exit;
 		}
 
