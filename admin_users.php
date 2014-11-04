@@ -364,50 +364,209 @@ case 'createform':
 <h2>
 	<?php echo WT_I18N::translate('Add a new user'); ?>
 </h2>
-<?php
+<form class="form-horizontal" name="newform" method="post" role="form" action="?action=createuser" onsubmit="return checkform(this);" autocomplete="off">
+	<?php echo WT_Filter::getCsrf(); ?>
+	<!-- REAL NAME -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="realname">
+			<?php echo WT_I18N::translate('Real name'); ?>
+		</label>
+		<div class="col-sm-9">
+			<input class="form-control" type="text" id="realname" name="realname" required maxlength="64" value="<?php echo WT_Filter::escapeHtml($realname); ?>" autofocus>
+			<p class="small text-muted">
+				<?php echo WT_I18N::translate('This is your real name, as you would like it displayed on screen.'); ?>
+			</p>
+		</div>
+	</div>
 
-	echo '
-	<form name="newform" method="post" action="admin_users.php?action=createuser" onsubmit="return checkform(this);" autocomplete="off">
-		', WT_Filter::getCsrf(), '
-		<table id="adduser">
-			<tr>
-				<td>', WT_I18N::translate('Real name'), help_link('real_name'), '</td>
-				<td><input type="text" name="realname" style="width:95%;" required maxlength="64" value="', WT_Filter::escapeHtml($realname), '" autofocus></td>
-				<td>', WT_I18N::translate('Administrator'), help_link('role'), '</td>
-				<td><input type="checkbox" name="canadmin" value="1"></td>
-			</tr>
-			<tr>
-				<td>', WT_I18N::translate('Username'), help_link('username'), '</td>
-				<td><input type="text" name="username" style="width:95%;" required maxlength="32" value="', WT_Filter::escapeHtml($username), '"></td>
-				<td>', WT_I18N::translate('Approved by administrator'), help_link('useradmin_verification'), '</td>
-				<td><input type="checkbox" name="verified_by_admin" value="1" checked="checked"></td>
-			</tr>
-			<tr>
-				<td>', WT_I18N::translate('Email address'), help_link('email'), '</td>
-				<td><input type="email" name="emailaddress" style="width:95%;" required maxlength="64" value="', WT_Filter::escapeHtml($emailaddress), '"></td>
-				<td>', WT_I18N::translate('Email verified'), help_link('useradmin_verification'), '</td>
-				<td><input type="checkbox" name="verified" value="1" checked="checked"></td>
-			</tr>
-			<tr>
-				<td>', WT_I18N::translate('Password'), help_link('password'), '</td>
-				<td><input type="password" name="pass1" style="width:95%;" value="', WT_Filter::escapeHtml($pass1), '" required placeholder="',  WT_I18N::plural('Use at least %s character.', 'Use at least %s characters.', WT_MINIMUM_PASSWORD_LENGTH, WT_I18N::number(WT_MINIMUM_PASSWORD_LENGTH)), '" pattern="', WT_REGEX_PASSWORD, '" onchange="form.pass2.pattern = regex_quote(this.value);"></td>
-				<td>', WT_I18N::translate('Automatically approve changes made by this user'), help_link('useradmin_auto_accept'), '</td>
-				<td><input type="checkbox" name="new_auto_accept" value="1"></td>
-			</tr>
-				<td>', WT_I18N::translate('Confirm password'), help_link('password_confirm'), '</td>
-				<td><input type="password" name="pass2" style="width:95%;" value="', WT_Filter::escapeHtml($pass2), '" required placeholder="', WT_I18N::translate('Type the password again.'), '" pattern="', WT_REGEX_PASSWORD, '"></td>
-				<td>', WT_I18N::translate('Allow this user to edit his account information'), help_link('useradmin_editaccount'), '</td>
-				<td><input type="checkbox" name="editaccount" value="1" checked="checked"></td>
-			<tr>
-				<td>', WT_I18N::translate('Preferred contact method'), '</td>
-				<td>';
-					echo edit_field_contact('new_contact_method', $new_contact_method);
-				echo '</td>
-				<td>', WT_I18N::translate('Visible to other users when online'), help_link('useradmin_visibleonline'), '</td>
-				<td><input type="checkbox" name="visibleonline" value="1" checked="checked"></td>
-			</tr>
-			<tr>
-			</tr>
+	<!-- REAL NAME -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="username">
+			<?php echo WT_I18N::translate('Username'); ?>
+		</label>
+		<div class="col-sm-9">
+			<input class="form-control" type="text" id="username" name="username" required maxlength="32" value="<?php echo WT_Filter::escapeHtml($username); ?>">
+			<p class="small text-muted">
+				<?php echo WT_I18N::translate('Usernames are case-insensitive and ignore accented letters, so that “chloe”, “chloë”, and “Chloe” are considered to be the same.'), ' ', WT_I18N::translate('Usernames may not contain the following characters: &lt; &gt; &quot; %% { } ;'); ?>
+			</p>
+		</div>
+	</div>
+
+	<!-- PASSWORD -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="pass1">
+			<?php echo WT_I18N::translate('Password'); ?>
+		</label>
+		<div class="col-sm-9">
+			<input class="form-control" type="passwword" id="pass1" name="pass1" pattern = "<?php echo WT_REGEX_PASSWORD; ?>" placeholder="<?php echo WT_I18N::plural('Use at least %s character.', 'Use at least %s characters.', WT_MINIMUM_PASSWORD_LENGTH, WT_I18N::number(WT_MINIMUM_PASSWORD_LENGTH)); ?>" required onchange="form.pass2.pattern = regex_quote(this.value);">
+			<p class="small text-muted">
+				<?php echo 'Passwords must be at least 6 characters long and are case-sensitive, so that “secret” is different to “SECRET”.'; ?>
+			</p>
+		</div>
+	</div>
+
+	<!-- CONFIRM PASSWORD -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="pass2">
+			<?php echo WT_I18N::translate('Confirm password'); ?>
+		</label>
+		<div class="col-sm-9">
+			<input class="form-control" type="passwword" id="pass2" name="pass2" pattern = "<?php echo WT_REGEX_PASSWORD; ?>" placeholder="<?php echo WT_I18N::translate('Type the password again.'); ?>" required>
+		</div>
+	</div>
+
+	<!-- EMAIL ADDRESS -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="emailaddress">
+			<?php echo WT_I18N::translate('Email address'); ?>
+		</label>
+		<div class="col-sm-9">
+			<input class="form-control" type="email" id="emailaddress" name="emailaddress" required maxlength="64" value="<?php echo WT_Filter::escapeHtml($emailaddress); ?>">
+		</div>
+	</div>
+
+	<!-- EMAIL VERIFIED -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="verified">
+		</label>
+		<div class="col-sm-9">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="verified" value="1" checked="checked">
+					<?php echo WT_I18N::translate('Email verified'); ?>
+				</label>
+				<p class="small text-muted">
+					<?php echo help_link('useradmin_verification'); ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- CONTACT METHOD -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="new_contact_method">
+			<?php echo WT_I18N::translate('Preferred contact method'); ?>
+		</label>
+		<div class="col-sm-9">
+			<?php echo select_edit_control('new_contact_method', WT_I18N::installed_languages(), null, $user_language, 'class="form-control"'); ?>
+			<input class="form-control" type="passwword" id="pass2" name="pass2" pattern = "<?php echo WT_REGEX_PASSWORD; ?>" placeholder="<?php echo WT_I18N::translate('Type the password again.'); ?>" required>
+			<p class="small text-muted">
+				<?php echo help_link('password_confirm'); ?>
+			</p>
+		</div>
+	</div>
+
+	<!-- LANGUAGE -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="user_language">
+			<?php echo /* I18N: A configuration setting */ WT_I18N::translate('Language'); ?>
+		</label>
+		<div class="col-sm-9">
+			<?php echo select_edit_control('user_language', WT_I18N::installed_languages(), null, $user_language, 'class="form-control"'); ?>
+		</div>
+	</div>
+
+	<!-- ADMINISTRATOR -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="canadmin">
+		</label>
+		<div class="col-sm-9">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="canadmin" value="1">
+					<?php echo WT_I18N::translate('Administrator'); ?>
+				</label>
+				<p class="small text-muted">
+					<?php echo help_link('role'); ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- ACCOUNT APPROVED -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="verified_by_admin">
+		</label>
+		<div class="col-sm-9">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="verified_by_admin" value="1" checked="checked">
+					<?php echo WT_I18N::translate('Approved by administrator'); ?>
+				</label>
+				<p class="small text-muted">
+					<?php echo help_link('useradmin_verification'); ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- AUTO ACCEPT -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="new_auto_accept">
+		</label>
+		<div class="col-sm-9">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="new_auto_accept" value="1">
+					<?php echo WT_I18N::translate('Automatically approve changes made by this user'); ?>
+				</label>
+				<p class="small text-muted">
+					<?php echo help_link('useradmin_auto_accept'); ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- EDIT ACCOUNT -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="editaccount">
+		</label>
+		<div class="col-sm-9">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="editaccount" value="1">
+					<?php echo WT_I18N::translate('Allow this user to edit his account information'); ?>
+				</label>
+				<p class="small text-muted">
+					<?php echo help_link('useradmin_editaccount'); ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- EDIT ACCOUNT -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="editaccount">
+		</label>
+		<div class="col-sm-9">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="editaccount" value="1">
+					<?php echo WT_I18N::translate('Allow this user to edit his account information'); ?>
+				</label>
+				<p class="small text-muted">
+					<?php echo help_link('useradmin_editaccount'); ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- VISIBLE ONLINE -->
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="visibleonline">
+			<?php echo /* I18N: A configuration setting */ WT_I18N::translate('Visible to other users when online'); ?>
+		</label>
+		<div class="col-sm-9">
+			<?php echo edit_field_contact('visibleonline', $new_contact_method); ?>
+			<p class="small text-muted">
+				<?php echo help_link('useradmin_visibleonline'); ?>
+			</p>
+		</div>
+	</div>
+
+	<!-- THEME -->
+
+	<table>
 			<tr>
 				<td>', WT_I18N::translate('Language'), '</td>
 				<td>', edit_field_language('user_language', $user_language), '</td>';
